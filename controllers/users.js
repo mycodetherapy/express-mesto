@@ -3,7 +3,7 @@ const  User  = require('../models/user');
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  console.log(req);
+  //console.log(req);
 
   User.create({ name, about, avatar })
     .then(user => res.send({ data: user }))
@@ -17,18 +17,40 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.getUserById = (req, res) => {
-  const { _id } = req.body;
-
-  User.create({ _id })
+  User.findById(req.params.id)
     .then((user) => res.send({ data: user }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
-// exports.getUsers = (req, res) => {
-//   res.status(200).send(User);
-// };
+module.exports.updateUser = (req, res) => {
 
-// exports.getUserById = (req, res) => {
-//   const {id} = req.params;
-//   res.status(200).send(User.find((item) => item._id === id));
-// }
+console.log(req.body);
+console.log(req.user._id);
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    req.body,
+    // Передадим объект опций:
+    {
+        new: true, // обработчик then получит на вход обновлённую запись
+       // runValidators: true, // данные будут валидированы перед изменением
+        upsert: true // если пользователь не найден, он будет создан
+    }
+)
+  .then(user => res.send({ data: user }))
+  .catch(user => res.send({ message: "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" })) ;
+}
+
+module.exports.updateAvatar = (req, res) => {
+  User.findByIdAndUpdate(
+    req.user._id,
+    req.body,
+    {
+        new: true,
+        runValidators: true,
+        upsert: true
+    }
+)
+  .then(user => res.send({ data: user }))
+  .catch(user => res.send({ message: "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" })) ;
+}

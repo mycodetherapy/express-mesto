@@ -16,11 +16,10 @@ const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
+ // useUnifiedTopology: true
   // useCreateIndex: true,
   // useFindAndModify: false
 });
-
- app.use('/users', require('./routes/users'));
 
  app.use((req, res, next) => {
   req.user = {
@@ -29,6 +28,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
   next();
 });
+
+app.use('/users', require('./routes/users'));
+
+app.use('/cards', require('./routes/cards'));
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
