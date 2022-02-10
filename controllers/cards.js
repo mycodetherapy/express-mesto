@@ -1,3 +1,4 @@
+const { errorHandler } = require("../utils/errors");
 const Card = require("../models/card");
 
 module.exports.getCards = (req, res) => {
@@ -6,7 +7,6 @@ module.exports.getCards = (req, res) => {
     .catch((err) => {
       errorHandler(err, res);
     });
-  //.catch((err) => res.status(500).send({ message: err.message }));
 };
 
 module.exports.createCard = (req, res) => {
