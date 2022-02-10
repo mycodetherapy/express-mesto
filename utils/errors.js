@@ -1,12 +1,15 @@
 const express = require('express');
+const BAD_REQEST = 400;
+const NOT_FOUND = 404;
+const DEFOULT_ERR = 500;
 
 module.exports.errorHandler = (err, res) => {
   if (err.name === "ValidationError") {
-    res.send({ message: "400 - Переданы некорректные данные." });
+    res.status(BAD_REQEST).send({ message: "Переданы некорректные данные." });
   } else if (err.name === "CastError") {
     //console.log(JSON.stringify(err));
-    res.send({ message: "404 - Карточка или пользователь не найден." });
+    res.status(NOT_FOUND).send({ message: "Карточка или пользователь не найден." });
   } else {
-    res.status(500).send({ message: err.message });
+    res.status(DEFOULT_ERR).send({ message: err.message });
   }
 };
