@@ -1,8 +1,8 @@
 const {
   NOT_FOUND,
   errorHandler,
-} = require("../utils/errors");
-const User = require("../models/user");
+} = require('../utils/errors');
+const User = require('../models/user');
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -24,11 +24,11 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .orFail(new Error("NotFound"))
+    .orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.message === "NotFound") {
-        res.status(NOT_FOUND).send({ message: "Пользователь не найден." });
+      if (err.message === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден.' });
       } else {
         errorHandler(err, res);
       }
@@ -43,14 +43,14 @@ module.exports.updateUser = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-      //upsert: true, // если пользователь не найден, он будет создан
-    }
+      // upsert: true, // если пользователь не найден, он будет создан
+    },
   )
-    .orFail(new Error("NotFound"))
+    .orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.message === "NotFound") {
-        res.status(NOT_FOUND).send({ message: "Пользователь не найден." });
+      if (err.message === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден.' });
       } else {
         errorHandler(err, res);
       }
@@ -62,11 +62,11 @@ module.exports.updateAvatar = (req, res) => {
     new: true,
     runValidators: true,
   })
-    .orFail(new Error("NotFound"))
+    .orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.message === "NotFound") {
-        res.status(NOT_FOUND).send({ message: "Пользователь не найден." });
+      if (err.message === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден.' });
       } else {
         errorHandler(err, res);
       }
