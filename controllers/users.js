@@ -1,5 +1,8 @@
-const { errorHandler } = require("../utils/errors");
-const User = require("../models/user");
+const {
+  NOT_FOUND,
+  errorHandler,
+} = require('../utils/errors');
+const User = require('../models/user');
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -21,9 +24,14 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
+    .orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      errorHandler(err, res);
+      if (err.message === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден.' });
+      } else {
+        errorHandler(err, res);
+      }
     });
 };
 
@@ -35,12 +43,17 @@ module.exports.updateUser = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-      upsert: true, // если пользователь не найден, он будет создан
-    }
+      // upsert: true, // если пользователь не найден, он будет создан
+    },
   )
+    .orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      errorHandler(err, res);
+      if (err.message === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден.' });
+      } else {
+        errorHandler(err, res);
+      }
     });
 };
 
@@ -48,10 +61,14 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
     runValidators: true,
-    upsert: true,
   })
+    .orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      errorHandler(err, res);
+      if (err.message === 'NotFound') {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден.' });
+      } else {
+        errorHandler(err, res);
+      }
     });
 };
