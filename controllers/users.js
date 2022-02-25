@@ -12,14 +12,15 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({ data: user }))
+    .then(() => res.status(200).send({ data: {name, about, avatar, email} }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       } else if (err.name === 'MongoServerError' && err.code === 11000) {
         next(new DuplicateEmailError('Пользователь с таким эмейлом уже существует.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -36,8 +37,8 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getUserInfo = (req, res, next) => {
-  // console.log(req.body);
-  User.findById(req.body._id)
+  console.log(req.user._id);
+  User.findById(req.user._id)
     .then((users) => {
       if (!users) {
         throw new NotFoundError('Пользователь не найден.');
@@ -60,8 +61,9 @@ module.exports.getUserById = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(err.message));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -81,8 +83,9 @@ module.exports.updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(err.message));
-      }
-      next(err);
+      } else {
+        next(err);
+      };
     });
 };
 
@@ -96,7 +99,8 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(err.message));
-      }
-      next(err);
+      } else {
+        next(err);
+      };
     });
 };
