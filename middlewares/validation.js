@@ -12,7 +12,7 @@ const validateRegisterBody = celebrate({
     email: Joi.string().required().email()
       .message({
         'any.required': 'Поле обязательно для заполнения.',
-        'string.email': 'Поле должно содержать электронную почту.',
+        'string.email': 'Поле должно содержать адрес электронной почты.',
       }),
     name: Joi.string().min(2).max(30)
       .messages({
@@ -30,14 +30,22 @@ const validateRegisterBody = celebrate({
            }
            return helpers.message('Поле должно содержать ссылку.');
          })
-    // email: Joi.string().required().custom((value, helpers) => {
-    //   if (validator.isEmail(value)) {
-    //     return value;
-    //   }
-    //   return helpers.message('Невалидный email.');
-    // }).messages({
-    //   'any.required': 'Поле обязательно для заполнения.',
-    // }),
+  },
+});
+
+const validateCreateCard = celebrate({
+  body: {
+    name: Joi.string().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля 2 символа.',
+        'string.max': 'Максимальная длина поля 30 символов.',
+      }),
+    link: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+             return value;
+           }
+           return helpers.message('Поле должно содержать ссылку.');
+         })
   },
 });
 
