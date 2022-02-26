@@ -6,7 +6,6 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
-//const validateRegisterBody = require('./middlewares/validation');
 const { validateRegisterBody } = require('./validation');
 const { login, createUser } = require('./controllers/users');
 const errorsHandler = require('./middlewares/error-handler');
@@ -40,3 +39,5 @@ app.use(errorsHandler);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
+
+// npx eslint . --fix

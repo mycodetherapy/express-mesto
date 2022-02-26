@@ -12,7 +12,11 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then(() => res.status(200).send({ data: {name, about, avatar, email} }))
+    .then(() => res.status(200).send({
+      data: {
+        name, about, avatar, email,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
@@ -54,7 +58,6 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  console.log(req.params);
   User.findById(req.params.userId)
     .orFail(new NotFoundError('Пользователь не найден.'))
     .then((user) => res.send({ data: user }))
@@ -85,7 +88,7 @@ module.exports.updateUser = (req, res, next) => {
         next(new BadRequestError(err.message));
       } else {
         next(err);
-      };
+      }
     });
 };
 
@@ -101,6 +104,6 @@ module.exports.updateAvatar = (req, res, next) => {
         next(new BadRequestError(err.message));
       } else {
         next(err);
-      };
+      }
     });
 };

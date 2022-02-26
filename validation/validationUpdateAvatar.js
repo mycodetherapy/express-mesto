@@ -1,5 +1,5 @@
-const { celebrate, Joi } = require("celebrate");
-const validator = require("validator");
+const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 
 const validationUpdateAvatar = celebrate({
   body: {
@@ -9,10 +9,10 @@ const validationUpdateAvatar = celebrate({
         if (validator.isURL(value)) {
           return value;
         }
-        return helpers.message("Поле должно содержать ссылку.");
+        return helpers.message('Поле должно содержать ссылку.');
       })
       .messages({
-        "any.required": "Поле обязательно для заполнения.",
+        'any.required': 'Поле обязательно для заполнения.',
       }),
   },
 });
